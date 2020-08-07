@@ -47,6 +47,14 @@ class NPC(pygame.sprite.Sprite):
             self.rect.center = (
                 SCREEN_WIDTH, random.randint(35, SCREEN_HEIGHT-35))
 
+    def addNPC(self):
+        global SCORE
+        if (self.rect.left < 0):
+            INC_ENEMIES += 1
+            E = NPC()
+            enemies.add(E)
+            all_sprites.add(E)
+
 
 class Player(pygame.sprite.Sprite):
     def __init__(self):
@@ -118,17 +126,19 @@ while True:
     back_ground.render()
 
     scores = font_small.render(str(SCORE), True, WHITE)
-    DISPLAY.blit(scores, (500, 10))
+    DISPLAY.blit(scores, (395, 10))
 
     for entity in all_sprites:
         DISPLAY.blit(entity.image, entity.rect)
         entity.move()
+        for enemy in enemies:
+            enemy.addNPC()
 
     if pygame.sprite.spritecollideany(P1, enemies):
         time.sleep(0.8)
 
         DISPLAY.fill((255, 0, 0))
-        DISPLAY.blit(game_over, (300, 350))
+        DISPLAY.blit(game_over, (300, 275))
 
         pygame.display.update()
         for entity in all_sprites:
@@ -136,11 +146,6 @@ while True:
         time.sleep(1.5)
         pygame.quit()
         sys.exit()
-
-    if (SCORE % 10 == 0):
-        INC_ENEMIES += 1
-        E = NPC()
-        enemies.add(E)
 
     pygame.display.update()
     FramePerSec.tick(FPS)
